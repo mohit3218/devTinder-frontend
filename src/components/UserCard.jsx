@@ -9,7 +9,7 @@ const UserCard = ({ user }) => {
       </figure>
       <div className="card-body">
         <h2 className="card-title">{firstName + " " + lastName}</h2>
-        <p>{ age && gender && age + ", " + gender}</p>
+        <p>{age && gender && age + ", " + gender}</p>
         <p>{about}</p>
         {/* <p>{skills}</p> */}
         <div className="card-actions justify-center my-4">
