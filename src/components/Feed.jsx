@@ -24,6 +24,11 @@ export const Feed = () => {
   useEffect(() => {
     getFeed();
   }, []);
+
+  if(!feed) return;
+
+  if(feed.length === 0) return <h1 className="font-bold text-2xl text-center my-10">No Users Found</h1>
+
   return (
     feed && (
       <div className="flex justify-center my-10">

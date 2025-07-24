@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addRequest } from "../utils/requestsSlice";
+import axios from "axios";
+import { BASE_URL } from "../utils/constants";
 
 const Requests = () => {
   const dispatch = useDispatch();
