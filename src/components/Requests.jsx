@@ -1,10 +1,26 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addRequest } from "../utils/requestsSlice";
 
 const Requests = () => {
   const dispatch = useDispatch();
   const requests = useSelector((store) => store.connections);
+
+  const reviewRequest = async (status, _id) => {
+    try {
+      const res = await axios.post(
+        BASE_URL + "request/review/" + status + "/" + _id,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      dispatch(removeRequest(_id));
+    } catch (err) {
+      console.log(err?.response?.data);
+    }
+  };
+
   const fetchRequests = async () => {
     try {
       const res = await axios.get(BASE_URL + "user/requests/received", {
@@ -20,19 +36,34 @@ const Requests = () => {
     fetchRequests();
   }, []);
 
-  if (!requests) return;
+  console.log("requests", requests);
+  //if (!requests) return;
 
-  if (requests.length === 0) return <h1>No Request Found</h1>;
+  if (requests === undefined || requests?.length === 0)
+    return (
+      <h1 className="font-bold text-2xl text-center my-10">No Request Found</h1>
+    );
 
   return (
     <div className="text-center my-10">
       <h1 className="text-3xl text-white text-bold">Requests</h1>
 
       {requests.map((request) => {
-        const {_id, firstName, lastName, photoUrl, age, gender, skills, about } =
-        request.fromUserId;
+        const {
+          _id,
+          firstName,
+          lastName,
+          photoUrl,
+          age,
+          gender,
+          skills,
+          about,
+        } = request.fromUserId;
         return (
-          <div key={_id} className="flex justify-between items-center m-4 p-4  rounded-lg bg-base-300 w-2/3 mx-auto">
+          <div
+            key={_id}
+            className="flex justify-between items-center m-4 p-4  rounded-lg bg-base-300 w-2/3 mx-auto"
+          >
             <div>
               <img
                 alt="photo"
@@ -47,8 +78,20 @@ const Requests = () => {
               {age && gender && <p>{age + ", " + gender}</p>}
               <p>{about}</p>
             </div>
-            <div><button className="btn btn-primary mx-2">Primary</button>
-            <button className="btn btn-secondary mx-2">Secondary</button></div>
+            <div>
+              <button
+                className="btn btn-primary mx-2"
+                onClick={() => reviewRequest("rejected", request._id)}
+              >
+                Reject
+              </button>
+              <button
+                className="btn btn-secondary mx-2"
+                onClick={() => reviewRequest("accepted", request._id)}
+              >
+                Accept
+              </button>
+            </div>
           </div>
         );
       })}
