@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addRequest } from "../utils/requestsSlice";
+import { addRequest, removeRequest } from "../utils/requestsSlice";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 
 const Requests = () => {
   const dispatch = useDispatch();
-  const requests = useSelector((store) => store.connections);
+  const requests = useSelector((store) => store.request);
 
   const reviewRequest = async (status, _id) => {
     try {
@@ -28,7 +28,8 @@ const Requests = () => {
       const res = await axios.get(BASE_URL + "user/requests/received", {
         withCredentials: true,
       });
-      dispatch(addRequest(res?.data?.data));
+      console.log("res.data.data ", res.data.data);
+      dispatch(addRequest(res.data.data));
     } catch (err) {
       console.log(err?.response?.data);
     }
@@ -38,8 +39,7 @@ const Requests = () => {
     fetchRequests();
   }, []);
 
-  console.log("requests", requests);
-  //if (!requests) return;
+  if (!requests) return;
 
   if (requests === undefined || requests?.length === 0)
     return (
